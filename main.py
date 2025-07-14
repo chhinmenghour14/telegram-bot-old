@@ -11,19 +11,19 @@ TOKEN = os.getenv("TELEGRAM_TOKEN")
 # 🟢 Dummy server for Render port binding and UptimeRobot monitoring
 def run_dummy_server():
     class HealthCheckHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain; charset=utf-8')
-        self.end_headers()
-        self.wfile.write("✅ Bot is alive!".encode('utf-8'))
-    
-    def do_HEAD(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain; charset=utf-8')
-        self.end_headers()
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write("✅ Bot is alive!".encode('utf-8'))
+
+        def do_HEAD(self):
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain; charset=utf-8')
+            self.end_headers()
 
     port = int(os.environ.get("PORT", 10000))  # Render sets this automatically
-    server = HTTPServer(("", port), Handler)
+    server = HTTPServer(("", port), HealthCheckHandler)
     print(f"✅ Dummy HTTP server running on port {port}")
     server.serve_forever()
 
